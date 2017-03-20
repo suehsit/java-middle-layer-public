@@ -436,6 +436,26 @@ EHSJML {
 };
 ```
 
+#### Stored Procedure Whitelist
+
+In order to restrict authenticated users to only be allowed to run certain stored procedures, a whitelist is being used. **Only stored procedures in the whitelist will be accessible by the user; no exceptions!**
+
+There are 2 methods for executing Oracle Stored Procedures, `doStoredProcedure` and `doUserStoredProcedure`, and `doUserStoredProcedure` calls `doStoredProcedure` to actually call a stored procedure, but first will check:
+
+- Is the user authenticated?
+- Is the stored procedure being called in the whitelist?
+
+If both are true, the call is allowed to proceed.
+
+If a user attempts to access a stored procedure that is not in the whitelist, the following message will be logged to the JML log:
+
+```
+User tried to access `STORED_PROCEDURE_NAME` which is not in the whitelist
+```
+
+If you create a new stored procedure, or rename an existing one, remember to update the `jml-server.xml` file to have the stored procedure AND restart the Tomcat server for the changes to take effect.
+
+
 ## Model functions
 
 ### Adminstration :: logoutUser
