@@ -36,6 +36,7 @@ import java.net.NetworkInterface;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -96,6 +97,7 @@ public class SecurityManager extends HttpServlet {
 
     private static Vector<String> uriExceptions = null;
     private static Vector<String> actionExceptions = null;
+    private static ArrayList<String> storedProceduresWhitelist = new ArrayList<String>();
 
     private static Hashtable<String, Login> activeUserLogins = null;
     private static Hashtable<String, Account> accounts = null;
@@ -159,6 +161,15 @@ public class SecurityManager extends HttpServlet {
             ((HttpServletRequest)(parameters.get(CoreConstants.GENERAL_ATTR_HTTPREQUEST))).getSession().getId();
 
         return (sessionId);
+    }
+    
+    /**
+     * The user is trying to execute a stored procudure, is it in the whitelist?
+     * @param name The name of the stored procedure that the user is trying to access
+     * @return True of False
+     */
+    public static boolean isStoredProcedureWhitelisted(String name) {
+        return storedProceduresWhitelist.contains(name.toUpperCase());
     }
 
     /**
@@ -539,6 +550,7 @@ public class SecurityManager extends HttpServlet {
 
         uriExceptions = new Vector<String>();
         actionExceptions = new Vector<String>();
+        storedProceduresWhitelist = new ArrayList<String>();
         activeUserLogins = new Hashtable<String, Login>();
         accounts = new Hashtable<String, Account>();
 
@@ -593,6 +605,19 @@ public class SecurityManager extends HttpServlet {
                     isSecurityAllRestrictedActions = false;
                     isSecurityOnlyLocalRequests = false;
                     isSecurityPartialRestrictedActions = true;
+                }
+            }
+            
+            // Build the whitelist of the whitelist of the stored procedures that the user is allowed to access directly
+            NodeList whitelistExceptions= xmlDocument.getElementsByTagName("stored-procedure-whitelist");
+            for (int i = 0; i < whitelistExceptions.getLength(); i++) {
+                NodeList childList = whitelistExceptions.item(i).getChildNodes();
+                for (int j = 0; j < childList.getLength(); j++) {
+                    Node childNode = childList.item(j);
+                    if ("name".equals(childNode.getNodeName())) {
+                        storedProceduresWhitelist.add(childList.item(j).getTextContent().trim().toUpperCase());
+                        log.debug("Stored procedure whitelisted: " + childList.item(j).getTextContent().trim().toUpperCase());
+                    }
                 }
             }
             

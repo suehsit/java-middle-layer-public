@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jml-server xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="jml-server-1.7.xsd">
+  <security-mode>OnlyLocalRequests</security-mode>
+  <!-- <security-mode>AllRestrictedActions</security-mode> -->
+  <!-- <security-mode>PartialRestrictedActions</security-mode> -->
+  <allowed-remote-actions>
+    <action>login</action>
+    <action>logout</action>
+    <action>doUserStoredProcedure</action>
+    <action>doEcho</action>
+  </allowed-remote-actions>
+  <stored-procedure-whitelist>
+    <name>PACKAGE.DO_SOMETHING</name>
+    <name>PACKAGE.DO_SOMETHING_ELSE</name>
+  </stored-procedure-whitelist>
+</jml-server>

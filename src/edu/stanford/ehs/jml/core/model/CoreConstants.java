@@ -32,8 +32,8 @@ public class CoreConstants {
     // Version
     public static final String PRODUCT_NAME = "Java Middle Layer";
     public static final String PRODUCT_OWNER = "Environmental Health and Safety, Stanford University";
-    public static final String PRODUCT_VERSION = "3.3.0";
-    public static final String PRODUCT_DATE = "2015.06.16 13:58";
+    public static final String PRODUCT_VERSION = "3.5.0";
+    public static final String PRODUCT_DATE = "2017.03.20 13:48";
 
     // General attributes
     public static final String GENERAL_ATTR_ACTION = "action";

@@ -196,6 +196,9 @@ public class Controller extends ControllerTemplate {
             viewOutput =
                     sendErrorToView(VIEW_PACKAGE + viewName, "Authorized login required for accessing the " + CoreConstants.DATABASE_CMND_USERSTOREDPROCEDURE +
                                     " function", log);
+        } else if (!SecurityManager.isStoredProcedureWhitelisted(storedProcedureName)) { // Is the stored procedure whitelisted?
+            log.info("User tried to access `" + storedProcedureName + "` which is not in the whitelist");
+            return (null);
         } else {
             AuthResponse authResponse = SecurityManager.touch(sessionId, accountId);
 
